@@ -1,0 +1,19 @@
+{
+  "name": "e-commerce_project_2024",
+  "version": "1.0.0",
+  "description": "E-Commerce_Project_2024",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/abdelrahmanelshreif/E-Commerce-2024.git"
+  },
+  "author": "Abdelrahman_Elshreif",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/abdelrahmanelshreif/E-Commerce-2024/issues"
+  },
+  "homepage": "https://github.com/abdelrahmanelshreif/E-Commerce-2024#readme"
+}
