@@ -10,7 +10,7 @@ const productSchema = new mongoose.Schema({
   productID: {
     type: String,
     default: null,
-    unique: true,
+    // unique: true,
   },
   category: {
     type: String,

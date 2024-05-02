@@ -18,13 +18,6 @@ exports.getMe = (req, res, next) => {
   next();
 };
 
-exports.getUserWithId = (req, res) => {
-  res.status(500).json({
-    status: 'error here',
-    message: 'this url is not yet defined'
-  });
-};
-
 exports.updateMe = catchAsync(async (req, res, next) => {
   console.log(req.file);
   // 1) Create error if user POSTs password data
