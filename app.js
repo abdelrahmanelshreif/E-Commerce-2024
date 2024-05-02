@@ -3,6 +3,7 @@ const morgan = require('morgan');
 const rateLimit = require('express-rate-limit');
 const helmet = require('helmet');
 const mongoSanitize = require('express-mongo-sanitize');
+const userRouter = require('./routes/userRoutes');
 const xss = require('xss-clean');
 const hpp = require('hpp');
 const AppError = require('./utils/appError');
@@ -44,6 +45,7 @@ app.use((req, res, next) => {
 });
 
 // Routes
+app.use('/E-Commerce/api/v1/user', userRouter);
 app.use(globalErrorHandler);
 
 app.all('*', (req, res, next) => {
