@@ -17,6 +17,7 @@ const userSchema = new mongoose.Schema(
       type: Number,
       unique: true,
     },
+    photo: String,
     email: {
       type: String,
       required: [true, "Please Enter Your Email"],
@@ -31,7 +32,7 @@ const userSchema = new mongoose.Schema(
     address: {
       governrate: String,
       city: String,
-      zipCode: Number,
+      street: Street,
       area: String,
       building: Number,
       floor: Number,
