@@ -25,10 +25,9 @@ const productSchema = new mongoose.Schema({
     type: Number,
     default: 0,
   },
-  rating: {
+  totalRating: {
     type: Number,
-    default: 0,
-    min: 0,
+    min: 1,
     max: 5,
   },
   originalPrice: {
@@ -58,6 +57,12 @@ const productSchema = new mongoose.Schema({
 productSchema.pre(/^find/, function(next) {
   this.find({ active: { $ne: false } });
   next();
+});
+
+productSchema.virtual("reviews", {
+  ref: "Review",
+  foreignField: "product",
+  localField: "_id",
 });
 
 const Product = mongoose.model("Product", productSchema);
