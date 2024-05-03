@@ -1,31 +1,53 @@
-const mongoose = require("mongoose");
-
-const couponSchema = new mongoose.Schema(
-  {
-    code: String,
-    sale: {
-      type: Number,
-      required: [true, "You must specify sale percentage!"],
+const mongoose = require('mongoose');
+// Code: The unique code for the coupon.
+// DiscountType: The type of discount, which can be either 'percentage' or 'fixed'.
+// DiscountAmount: The amount or percentage of the discount.
+// MinimumPurchaseAmount: The minimum purchase amount required to apply the coupon.
+// ValidFrom: The date from which the coupon becomes valid.
+// ValidUntil: The date until which the coupon remains valid.
+// MaxRedemptions: The maximum number of times the coupon can be redeemed (optional, defaults to Infinity).
+// CurrentRedemptions: The current number of times the coupon has been redeemed (optional, defaults to 0).
+// CreatedAt: The timestamp of when the coupon was created.
+const couponSchema = new mongoose.Schema({
+    code: {
+        type: String,
+        required: true,
+        unique: true
     },
-    active: {
-      type: Boolean,
-      default: true,
+    discountType: {
+        type: String,
+        enum: ['percentage', 'fixed'],
+        required: true
     },
-    validDays: {
-      type: Number,
-      required: [true, "You must specify valid Days!"],
+    discountAmount: {
+        type: Number,
+        required: true
     },
-    expiryDate: Date,
-    createdAt: Date,
-  },
-  /*scema options*/ { toJSON: { virtuals: true }, toObject: { virtuals: true } }
-);
-couponSchema.pre("save", function(next) {
-  this.expiryDate = new Date(Date.now() + 24 * 60 * 60 * 1000 * this.validDays);
-  this.createdAt = Date.now();
-  next();
+    minimumPurchaseAmount: {
+        type: Number,
+        default: 0
+    },
+    validFrom: {
+        type: Date,
+        required: true
+    },
+    validUntil: {
+        type: Date,
+        required: true
+    },
+    maxRedemptions: {
+        type: Number,
+        default: Infinity
+    },
+    currentRedemptions: {
+        type: Number,
+        default: 0
+    },
+    createdAt: {
+        type: Date,
+        default: Date.now
+    }
 });
 
-const Coupon = mongoose.model("Coupon", couponSchema);
-
+const Coupon = mongoose.model('Coupon', couponSchema);
 module.exports = Coupon;

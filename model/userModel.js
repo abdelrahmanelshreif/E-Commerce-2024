@@ -38,6 +38,7 @@ const userSchema = new mongoose.Schema(
       floor: Number,
       Appartment: Number,
     },
+    verificationCode: Number,
     role: {
       type: String,
       enum: ["user", "admin", "merchant"],
@@ -74,13 +75,6 @@ const userSchema = new mongoose.Schema(
       default: true,
     },
     updatedAt: Date,
-    wallet: {
-      Coins: { type: Number, default: 0 },
-      Money: { type: Number, default: 0 },
-      canCount: { type: Number, default: 0 },
-      bottleCount: { type: Number, default: 0 },
-      updatedAt: { type: Date, default: Date.now },
-    },
   },
   { toJSON: { virtuals: true }, toObject: { virtuals: true } }
 );
