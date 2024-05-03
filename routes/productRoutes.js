@@ -1,16 +1,14 @@
-const productController = require('../controllers/productController'); 
-const handlerFactory = require('../controllers/handlerFactory'); 
+const productController = require('../controllers/productController');
 const express = require('express');
+const cartRouter = require('./cartRoutes');
 
 const router = express.Router();
+router.use('/:productID/cart', cartRouter);
 
-//Get All Products
-router.get('/', productController.getAllProducts);
-//Get Product by ID
-router.get('/:id', handlerFactory.getOne);
+router
+  .route('/')
+  .get(productController.getAllProducts)
+  .post(productController.createNewProduct);
 
-//Get Products Belonging To Same Cateogry
-router.get('/{category}',productController.getProductsByCategory);
-
-
+router.get('/:id', productController.getProductByID);
 module.exports = router;

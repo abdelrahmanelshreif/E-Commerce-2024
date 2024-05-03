@@ -32,7 +32,7 @@ const userSchema = new mongoose.Schema(
     address: {
       governrate: String,
       city: String,
-      street: Street,
+      street: String,
       area: String,
       building: Number,
       floor: Number,

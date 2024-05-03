@@ -1,50 +1,53 @@
-const AppError = require("../utils/appError");
-const catchAsync = require("../utils/catchAsync");
-const APIFeatures = require("../utils/apiFeatures");
+const AppError = require('../utils/appError');
+const catchAsync = require('../utils/catchAsync');
+const APIFeatures = require('../utils/apiFeatures');
 
-exports.deleteOne = (Model) =>
+exports.deleteOne = (Model, withUser) =>
   catchAsync(async (req, res, next) => {
-    const doc = await Model.findByIdAndDelete(req.params.id);
-
-    if (!doc) {
-      return next(new AppError("No document found with that ID", 404));
+    let doc;
+    if (withUser) {
+      doc = await Model.findOneAndDelete({ user: req.user.id });
+    } else {
+      doc = await Model.findByIdAndDelete(req.params.id);
     }
-
+    if (!doc) {
+      return next(new AppError('No document found with that ID', 404));
+    }
     res.status(204).json({
-      status: "success",
-      data: null,
+      status: 'success',
+      data: null
     });
   });
-exports.updateOne = (Model) =>
+exports.updateOne = Model =>
   catchAsync(async (req, res, next) => {
     const doc = await Model.findByIdAndUpdate(req.params.id, req.body, {
       new: true,
-      runValidators: true,
+      runValidators: true
     });
 
     if (!doc) {
-      return next(new AppError("No document Found with that ID", 404));
+      return next(new AppError('No document Found with that ID', 404));
     }
     res.status(200).json({
-      status: "sucess",
+      status: 'sucess',
       data: {
-        data: doc,
-      },
+        data: doc
+      }
     });
   });
-exports.createOne = (Model) =>
+exports.createOne = Model =>
   catchAsync(async (req, res, next) => {
     let newDocData = req.body;
     if (req.file) {
       const buffer = req.file.buffer;
-      newDocData[req.file.fieldname] = buffer.toString("base64");
+      newDocData[req.file.fieldname] = buffer.toString('base64');
     }
     const newDoc = await Model.create(newDocData);
     res.status(201).json({
-      status: "success",
+      status: 'success',
       data: {
-        data: newDoc,
-      },
+        data: newDoc
+      }
     });
   });
 exports.getOne = (Model, popOptions) =>
@@ -59,17 +62,17 @@ exports.getOne = (Model, popOptions) =>
     const doc = await features.query;
 
     if (!doc) {
-      return next(new AppError("No document found with that ID", 404));
+      return next(new AppError('No document found with that ID', 404));
     }
 
     res.status(200).json({
-      status: "success",
+      status: 'success',
       data: {
-        data: doc,
-      },
+        data: doc
+      }
     });
   });
-exports.getAll = (Model) =>
+exports.getAll = Model =>
   catchAsync(async (req, res, next) => {
     // hack for get all reviews
     let filter = {};
@@ -84,10 +87,10 @@ exports.getAll = (Model) =>
     const docs = await features.query;
 
     res.status(200).json({
-      status: "success",
+      status: 'success',
       results: docs.length,
       data: {
-        docs,
-      },
+        docs
+      }
     });
   });
