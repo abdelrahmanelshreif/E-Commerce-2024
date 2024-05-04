@@ -19,7 +19,7 @@ exports.getMe = (req, res, next) => {
 };
 
 exports.updateMe = catchAsync(async (req, res, next) => {
-  console.log(req.file);
+  //console.log(req.file);
   // 1) Create error if user POSTs password data
   if (req.body.password || req.body.passwordConfirm) {
     return next(
@@ -36,7 +36,7 @@ exports.updateMe = catchAsync(async (req, res, next) => {
     'lastName',
     'address',
     'email',
-    'phoneNumber',
+    'phoneNumber'
   );
   // if (req.file) filterbody.photo = req.file.filename;
 
@@ -67,4 +67,3 @@ exports.getUser = factory.getOne(User);
 exports.getAllUsers = factory.getAll(User);
 exports.updateUser = factory.updateOne(User);
 exports.deleteUser = factory.deleteOne(User);
-
