@@ -12,10 +12,12 @@ const compression = require('compression');
 const productRouter = require('./routes/productRoutes');
 const userRouter = require('./routes/userRoutes');
 const cartRouter = require('./routes/cartRoutes');
+const cors = require('cors');
 const app = express();
 
 // Set security HTTP headers
 app.use(helmet());
+app.use(cors());
 
 // DEVELOPMENT LOGGING
 if (process.env.NODE_ENV === 'development') {

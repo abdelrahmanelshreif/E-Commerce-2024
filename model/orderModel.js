@@ -7,7 +7,7 @@ const orderSchema = new mongoose.Schema({
     unique: true,
   },
   payemetMethod: {
-    type: String,
+    type: Enumerator['Cash On Delievry','Online Payment'],
     required: [true, "Please specify Your payment method!"],
   },
   shippingFee: {
