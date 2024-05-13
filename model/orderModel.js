@@ -1,4 +1,6 @@
 const mongoose = require('mongoose');
+const catchAsync = require('../utils/catchAsync');
+
 
 const orderSchema = new mongoose.Schema({
   orderID: {
@@ -41,8 +43,26 @@ const orderSchema = new mongoose.Schema({
     name: { type: String, required: true },
     phoneNumber: { type: String, required: true },
     email: { type: String, required: true }
+  }  
+}, 
+ { toJSON: { virtuals: true }, toObject: { virtuals: true } }
+);
+
+orderSchema.pre('save',(async function(next) {
+  // if (!this.isNew) return next();
+
+  const Lastorder = await this.constructor.findOne(
+  {}, 
+  {},
+  { sort: { orderID: -1}});
+  if (Lastorder) {
+  this.orderID= Lastorder.orderID + 1;
+  } else {
+  this.orderID = 1;
   }
-});
+  next();
+  })
+  );
 
 const Order = mongoose.model('Order', orderSchema);
 
