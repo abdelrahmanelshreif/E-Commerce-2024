@@ -52,7 +52,26 @@ const productSchema = new mongoose.Schema({
     select: false,
     default: true,
   },
-});
+},
+{ toJSON: { virtuals: true }, toObject: { virtuals: true } }
+);
+
+
+productSchema.pre('save',(async function(next) {
+  if (!this.isNew) return next();
+
+  const lastProd = await this.constructor.findOne(
+  {}, 
+  {},
+  { sort: { productID: -1}});
+  if (lastProd) {
+  this.productID= lastProd.productID + 1;
+  } else {
+  this.productID = 1;
+  }
+  next();
+  })
+  );
 
 productSchema.pre(/^find/, function(next) {
   this.find({ active: { $ne: false } });
