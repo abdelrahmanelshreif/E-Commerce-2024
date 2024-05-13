@@ -49,7 +49,7 @@ const orderSchema = new mongoose.Schema({
 );
 
 orderSchema.pre('save',(async function(next) {
-  // if (!this.isNew) return next();
+  if (!this.isNew) return next();
 
   const Lastorder = await this.constructor.findOne(
   {}, 
