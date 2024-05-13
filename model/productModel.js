@@ -64,7 +64,7 @@ productSchema.pre('save',(async function(next) {
   {}, 
   {},
   { sort: { productID: -1}});
-  if (Lastorder) {
+  if (lastProd) {
   this.productID= lastProd.productID + 1;
   } else {
   this.productID = 1;
