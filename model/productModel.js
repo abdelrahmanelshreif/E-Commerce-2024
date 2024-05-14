@@ -1,60 +1,86 @@
 const mongoose = require("mongoose");
 
-//REVIEW; ??
-
 const productSchema = new mongoose.Schema({
-  name: {
-    type: String,
-    required: [true, "Please Enter Your Product Name"],
+  sold: {
+    type: Number,
+    default: 0
   },
-  productID: {
-    type: String,
-    default: null,
-    // unique: true,
+  images: {
+    type: [String],
+    default: []
   },
-  category: {
+  subcategory: {
+    type: [{
+      _id: mongoose.Schema.Types.ObjectId,
+      name: String,
+      slug: String,
+      category: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Category'
+      }
+    }],
+    default: []
+  },
+  ratingsQuantity: {
+    type: Number,
+    default: 0
+  },
+  title: {
     type: String,
-    unique: true,
-    required: [true, "Please Enter Your Product Category"],
+    required: [true, "Please Enter Your Product Name"]
+  },
+  slug: {
+    type: String,
+    required: true,
+    unique: true
   },
   description: {
     type: String,
-    required: [true, "Please Enter Your Product description"],
+    required: [true, "Please Enter Your Product description"]
   },
-  stock: {
+  quantity: {
     type: Number,
-    default: 0,
+    default: 0
   },
-  totalRating: {
+  price: {
     type: Number,
-    min: 1,
-    max: 5,
+    required: [true, "Please Enter Your Product Price"]
   },
-  originalPrice: {
-    type: Number,
-    required: [true, "Please Enter Your Product Price"],
-  },
-  currentPrice: {
-    type: Number,
-    default: function() {
-      return this.originalPrice;
-    },
-  },
-  size: {
+  imageCover: {
     type: String,
-    default: "One Size",
+    required: true
   },
-  color: [{ type: String, default: null }],
-  productPhotos: [{ type: String, default: null }],
-  createdAt: { type: Date, default: Date.now() },
-  active: {
-    type: Boolean,
-    select: false,
-    default: true,
+  category: {
+    _id: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Category'
+    },
+    name: String,
+    slug: String,
+    image: String
   },
-},
-{ toJSON: { virtuals: true }, toObject: { virtuals: true } }
-);
+  brand: {
+    _id: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Brand'
+    },
+    name: String,
+    slug: String,
+    image: String
+  },
+  ratingsAverage: {
+    type: Number,
+    default: 0
+  },
+  createdAt: {
+    type: Date,
+    default: Date.now
+  },
+  updatedAt: {
+    type: Date,
+    default: Date.now
+  }
+});
 
 
 productSchema.pre('save',(async function(next) {
