@@ -11,6 +11,7 @@ const productRouter = require('./routes/productRoutes');
 const userRouter = require('./routes/userRoutes');
 const cartRouter = require('./routes/cartRoutes');
 const orderRouter = require('./routes/orderRoutes');
+const photoRouter = require('./routes/photoRoutes');
 const cors = require('cors');
 
 const app = express();
@@ -42,6 +43,7 @@ app.use((req, res, next) => {
 });
 
 // Routes
+app.use('/E-Commerce/api/v1/photo', photoRouter);
 app.use('/E-Commerce/api/v1/user', userRouter);
 app.use('/E-Commerce/api/v1/products', productRouter);
 app.use('/E-Commerce/api/v1/cart', cartRouter);

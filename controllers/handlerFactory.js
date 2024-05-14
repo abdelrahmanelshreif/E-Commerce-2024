@@ -1,6 +1,27 @@
 const AppError = require('../utils/appError');
 const catchAsync = require('../utils/catchAsync');
 const APIFeatures = require('../utils/apiFeatures');
+const multer = require('multer');
+const path = require('path');
+
+const multerStorage = multer.diskStorage({
+  destination: function(req, file, cb) {
+    cb(null, './uploads');
+  },
+  filename: function(req, file, cb) {
+    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1e9);
+    const extension = file.originalname.split('.').pop();
+    cb(null, uniqueSuffix + '.' + extension);
+  }
+});
+const multerFilter = (req, file, cb) => {
+  // Accept only image files
+  if (file.mimetype.startsWith('image/')) {
+    cb(null, true); // Accept the file
+  } else {
+    cb(new Error('Only image files are allowed!'), false); // Reject the file
+  }
+};
 
 exports.deleteOne = (Model, withUser) =>
   catchAsync(async (req, res, next) => {
@@ -20,7 +41,12 @@ exports.deleteOne = (Model, withUser) =>
   });
 exports.updateOne = Model =>
   catchAsync(async (req, res, next) => {
-    const doc = await Model.findByIdAndUpdate(req.params.id, req.body, {
+    let newDocData = req.body;
+    if (req.file) {
+      const photoURL = `https://e-commerce-2024-lzfv.onrender.com/E-Commerce/api/v1/photo/${req.file.filename}`;
+      newDocData[req.file.fieldname] = photoURL;
+    }
+    const doc = await Model.findByIdAndUpdate(req.params.id, newDocData, {
       new: true,
       runValidators: true
     });
@@ -39,8 +65,8 @@ exports.createOne = Model =>
   catchAsync(async (req, res, next) => {
     let newDocData = req.body;
     if (req.file) {
-      const buffer = req.file.buffer;
-      newDocData[req.file.fieldname] = buffer.toString('base64');
+      const photoURL = `https://e-commerce-2024-lzfv.onrender.com/E-Commerce/api/v1/photo/${req.file.filename}`;
+      newDocData[req.file.fieldname] = photoURL;
     }
     const newDoc = await Model.create(newDocData);
     res.status(201).json({
@@ -94,3 +120,27 @@ exports.getAll = Model =>
       }
     });
   });
+
+exports.uploadPhoto = fieldName =>
+  catchAsync(async (req, res, next) => {
+    const upload = multer({
+      storage: multerStorage,
+      fileFilter: multerFilter
+    }).single(fieldName);
+    // Handle file upload
+    upload(req, res, err => {
+      if (err) {
+        return next(new AppError('Error uploading file', 400));
+      }
+      next(); // Call next middleware or route handler
+    });
+  });
+
+exports.accessPhoto = catchAsync(async (req, res, next) => {
+  const filename = req.params.filename;
+  if (!filename) {
+    return next(new AppError('No Photo Found', 404));
+  }
+  const filePath = path.join(__dirname, '..', 'uploads', filename);
+  res.sendFile(filePath);
+});

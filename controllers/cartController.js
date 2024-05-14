@@ -22,7 +22,10 @@ exports.addToCart = catchAsync(async (req, res, next) => {
   let cart = await Cart.findOne({ user: req.user.id });
   if (!cart) {
     // If the cart doesn't exist for the user, create a new cart
-    cart = await Cart.create({ user: req.user.id, items: [] });
+    cart = await Cart.create({
+      user: req.user.id,
+      items: []
+    });
   }
 
   // Check if the product is already in the cart

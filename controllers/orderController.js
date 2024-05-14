@@ -44,7 +44,16 @@ exports.addOrder = catchAsync(async (req, res, next) => {
 
   const order = await Order.create(orderData);
 
-  await Cart.findOneAndDelete({ user: userId });
+  await Cart.findOneAndUpdate(
+    { user: userId },
+    {
+      $unset: {
+        items: ''
+      }
+    },
+    { new: true } // This option returns the modified document
+  );
+
   res.status(201).json({
     status: 'success',
     message: 'Order created successfully',
