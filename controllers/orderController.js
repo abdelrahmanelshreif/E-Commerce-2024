@@ -129,7 +129,10 @@ exports.getOrders = async (req, res) => {
         const userId = req.user._id; // Assuming you have the user ID available in the request
 
         // Find all orders for the user
-        const orders = await Order.find({ user: userId }).populate('products.product');
+        const orders = await Order.find({ user: userId }).populate({
+          path: 'products.product',
+          select: 'title price imageCover -brand -category' // Specify the fields to populate
+      });
 
         // Map the orders to a simpler format for response
         const formattedOrders = orders.map(order => ({
