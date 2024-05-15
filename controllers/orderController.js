@@ -62,6 +62,7 @@
 // });
 
 const Order = require('../model/orderModel');
+const factory = require('../controllers/handlerFactory');
 const Cart = require('../model/cartModel');
 
 // Create a new order
@@ -117,6 +118,36 @@ exports.createOrder = async (req, res) => {
     } catch (error) {
         // Handle any errors
         console.error('Error creating order:', error);
+        res.status(500).json({ message: 'Internal server error' });
+    }
+};
+
+
+
+exports.getOrders = async (req, res) => {
+    try {
+        const userId = req.user._id; // Assuming you have the user ID available in the request
+
+        // Find all orders for the user
+        const orders = await Order.find({ user: userId }).populate('products.product');
+
+        // Map the orders to a simpler format for response
+        const formattedOrders = orders.map(order => ({
+            _id: order._id,
+            address: order.address,
+            totalOrderPrice: order.totalOrderPrice,
+            createdAt: order.createdAt
+        }));
+
+        // Respond with the formatted orders
+        res.status(200).json(
+          { 
+          status: 'success',
+          orders: orders
+         });
+    } catch (error) {
+        // Handle any errors
+        console.error('Error getting orders:', error);
         res.status(500).json({ message: 'Internal server error' });
     }
 };
