@@ -32,7 +32,7 @@ router.delete('/deleteMe', userController.deleteMe);
 router.get('/me', userController.getMe, userController.getUser);
 router
   .route('/cart')
-  .get(userController.getMe, cartController.getCurrentUserCart);
+  .get(userController.getMe, cartController.getCart);
 
 // Adminstrator Features On User Protection
 router.use(authController.restrictTo('admin'));

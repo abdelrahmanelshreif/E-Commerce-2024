@@ -1,84 +1,112 @@
 const mongoose = require('mongoose');
-
-//REVIEW; ??
-
-const productSchema = new mongoose.Schema(
-  {
-    name: {
-      type: String,
-      required: [true, 'Please Enter Your Product Name']
-    },
-    productID: {
-      type: Number,
-      default: null
-    },
-    category: {
-      type: String,
-      required: [true, 'Please Enter Your Product Category']
-    },
-    description: {
-      type: String,
-      required: [true, 'Please Enter Your Product description']
-    },
-    stock: {
-      type: Number,
-      default: 0
-    },
-    totalRating: {
-      type: Number,
-      min: 1,
-      max: 5
-    },
-    originalPrice: {
-      type: Number,
-      required: [true, 'Please Enter Your Product Price']
-    },
-    currentPrice: {
-      type: Number,
-      default: function() {
-        return this.originalPrice;
-      }
-    },
-    size: {
-      type: String,
-      default: 'One Size'
-    },
-    color: [{ type: String, default: null }],
-    productPhoto: { type: String, default: null },
-    createdAt: { type: Date, default: Date.now() },
-    active: {
-      type: Boolean,
-      select: false,
-      default: true
-    }
+const productSchema = new mongoose.Schema({
+  title: {
+    type: String,
+    required: true
   },
-  { toJSON: { virtuals: true }, toObject: { virtuals: true } }
-);
+  slug: {
+    type: String,
+    required: true
+  },
+  description: {
+    type: String,
+    required: true
+  },
+  quantity: {
+    type: Number,
+    required: true
+  },
+  price: {
+    type: Number,
+    required: true
+  },
+  sold: {
+    type: Number,
+    required: true
+  },
+  images: [
+    {
+      type: String,
+      required: true
+    }
+  ],
+  imageCover: {
+    type: String,
+    required: true
+  },
+  category: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Category',
+    required: true
+  },
+  subcategory: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Subcategory'
+      //required: [true, 'A product must belong to at least one subcategory']
+    }
+  ],
+  brand: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Brand',
+    required: true
+  },
+  ratingsAverage: {
+    type: Number,
+    required: true
+  },
+  ratingsQuantity: {
+    type: Number,
+    required: true
+  },
+  createdAt: {
+    type: Date
+    // required: true
+  },
+  updatedAt: {
+    type: Date
+    // required: true
+  },
+  reviews: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Review'
+    }
+  ]
 
-productSchema.pre('save', async function(next) {
-  const lastProd = await this.constructor.findOne(
-    {},
-    {},
-    { sort: { productID: -1 } }
-  );
-  if (lastProd) {
-    this.productID = lastProd.productID + 1;
-  } else {
-    this.productID = 1;
-  }
-  next();
 });
 
 productSchema.pre(/^find/, function(next) {
-  this.find({ active: { $ne: false } });
+  this.populate({
+    path: 'category',
+    select: 'name slug image'
+  }).populate({
+    path: 'brand',
+    select: 'name slug image'
+  });
+  // .populate({
+  //   path: 'subcategory',
+  //   select: 'name slug category'
+  // });
   next();
 });
+productSchema.post('save', async function(doc, next) {
+  await doc
+    .populate({
+      path: 'category',
+      select: 'name slug image'
+    })
+    .populate({
+      path: 'brand',
+      select: 'name slug image'
+    })
+    // .populate({
+    //   path: 'subcategory',
+    //   select: 'name slug category'
+    // })
+    .execPopulate();
+  next();
 
-productSchema.virtual('reviews', {
-  ref: 'Review',
-  foreignField: 'product',
-  localField: '_id'
-});
 
 const Product = mongoose.model('Product', productSchema);
 
