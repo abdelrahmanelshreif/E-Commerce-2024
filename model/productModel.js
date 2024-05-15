@@ -25,71 +25,32 @@ const productSchema = new mongoose.Schema({
     type: Number,
     required: true
   },
-  images: [{
-    type: String,
-    required: true
-  }],
+  images: [
+    {
+      type: String,
+      required: true
+    }
+  ],
   imageCover: {
     type: String,
     required: true
   },
   category: {
-    _id: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'Category',
-      required: true
-    },
-    name: {
-      type: String,
-      required: true
-    },
-    slug: {
-      type: String,
-      required: true
-    },
-    image: {
-      type: String,
-      required: true
-    }
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Category',
+    required: true
   },
-  subcategory: [{
-    _id: {
+  subcategory: [
+    {
       type: mongoose.Schema.Types.ObjectId,
-      ref: 'Subcategory',
-      required: true
-    },
-    name: {
-      type: String,
-      required: true
-    },
-    slug: {
-      type: String,
-      required: true
-    },
-    category: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'Category',
-      required: true
+      ref: 'Subcategory'
+      //required: [true, 'A product must belong to at least one subcategory']
     }
-  }],
+  ],
   brand: {
-    _id: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'Brand',
-      required: true
-    },
-    name: {
-      type: String,
-      required: true
-    },
-    slug: {
-      type: String,
-      required: true
-    },
-    image: {
-      type: String,
-      required: true
-    }
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Brand',
+    required: true
   },
   ratingsAverage: {
     type: Number,
@@ -100,17 +61,51 @@ const productSchema = new mongoose.Schema({
     required: true
   },
   createdAt: {
-    type: Date,
+    type: Date
     // required: true
   },
   updatedAt: {
-    type: Date,
+    type: Date
     // required: true
   },
-  reviews: [{
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'Review'
-  }]
+  reviews: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Review'
+    }
+  ]
+});
+
+productSchema.pre(/^find/, function(next) {
+  this.populate({
+    path: 'category',
+    select: 'name slug image'
+  }).populate({
+    path: 'brand',
+    select: 'name slug image'
+  });
+  // .populate({
+  //   path: 'subcategory',
+  //   select: 'name slug category'
+  // });
+  next();
+});
+productSchema.post('save', async function(doc, next) {
+  await doc
+    .populate({
+      path: 'category',
+      select: 'name slug image'
+    })
+    .populate({
+      path: 'brand',
+      select: 'name slug image'
+    })
+    // .populate({
+    //   path: 'subcategory',
+    //   select: 'name slug category'
+    // })
+    .execPopulate();
+  next();
 });
 
 const Product = mongoose.model('Product', productSchema);
