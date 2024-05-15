@@ -100,13 +100,9 @@ productSchema.post('save', async function(doc, next) {
       path: 'brand',
       select: 'name slug image'
     })
-    // .populate({
-    //   path: 'subcategory',
-    //   select: 'name slug category'
-    // })
     .execPopulate();
   next();
-
+});
 
 const Product = mongoose.model('Product', productSchema);
 

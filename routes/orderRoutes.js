@@ -5,6 +5,6 @@ const express = require('express');
 const router = express.Router();
 router.use(authController.protect);
 
-router.route('/addOrder').post(orderController.addOrder);
+router.route('/addOrder/:id').post(orderController.createOrder);
 
 module.exports = router;

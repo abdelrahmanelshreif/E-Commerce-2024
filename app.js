@@ -46,12 +46,12 @@ app.use((req, res, next) => {
 
 // Routes
 app.use('/E-Commerce/api/v1/photo', photoRouter);
+app.use('/E-Commerce/api/v1/order', orderRouter);
+app.use('/E-Commerce/api/v1/cart', cartRouter);
 app.use('/E-Commerce/api/v1/user', userRouter);
 app.use('/E-Commerce/api/v1/cateogries', cateogryRouter);
 app.use('/E-Commerce/api/v1/brands', brandRouter);
 app.use('/E-Commerce/api/v1/products', productRouter);
-app.use('/E-Commerce/api/v1/cart', cartRouter);
-app.use('/E-Commerce/api/v1/order', orderRouter);
 app.use(globalErrorHandler);
 
 app.all('*', (req, res, next) => {

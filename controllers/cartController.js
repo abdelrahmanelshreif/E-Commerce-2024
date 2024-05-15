@@ -1,7 +1,6 @@
 const Cart = require('../model/cartModel');
 const Product = require('../model/productModel');
 
-
 exports.addToCart = async (req, res) => {
   try {
     const { productId } = req.body;
@@ -41,6 +40,9 @@ exports.addToCart = async (req, res) => {
   } catch (error) {
     console.error('Error adding to cart:', error);
     res.status(500).json({ status: 'error', message: 'Internal server error' });
+  }
+};   
+
 exports.getCart = async (req, res) => {
   try {
     const cartOwner = req.user._id; // Assuming user ID is stored in req.user
