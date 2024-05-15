@@ -1,6 +1,6 @@
-const mongoose = require("mongoose");
-const User = require("./userModel");
-const Product = require("./productModel");
+const mongoose = require('mongoose');
+const User = require('./userModel');
+const Product = require('./productModel');
 
   
 
@@ -58,6 +58,7 @@ cartSchema.virtual('populatedProducts.product.category', {
   foreignField: '_id',
   justOne: true
 });
+
 
 const Cart = mongoose.model('Cart', cartSchema);
 

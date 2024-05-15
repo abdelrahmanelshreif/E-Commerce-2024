@@ -1,4 +1,5 @@
 const productController = require('../controllers/productController');
+const authController = require('../controllers/authController');
 const express = require('express');
 const cartRouter = require('./cartRoutes');
 
@@ -8,7 +9,18 @@ router.use('/:productID/cart', cartRouter);
 router
   .route('/')
   .get(productController.getAllProducts)
-  .post(productController.createNewProduct);
-
-router.get('/:id', productController.getProductByID);
+  .post(
+    productController.uploadProductPhoto,
+    productController.createNewProduct
+  );
+router.use(authController.protect);
+router.use(authController.restrictTo('admin'));
+router
+  .route('/:id')
+  .get(productController.getProductByID)
+  .patch(
+    productController.uploadProductPhoto,
+    productController.updateProductwithID
+  )
+  .delete(productController.deleteProductwithID);
 module.exports = router;

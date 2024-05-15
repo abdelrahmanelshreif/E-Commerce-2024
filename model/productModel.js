@@ -1,5 +1,4 @@
 const mongoose = require('mongoose');
-
 const productSchema = new mongoose.Schema({
   title: {
     type: String,
@@ -74,6 +73,7 @@ const productSchema = new mongoose.Schema({
       ref: 'Review'
     }
   ]
+
 });
 
 productSchema.pre(/^find/, function(next) {
@@ -106,7 +106,7 @@ productSchema.post('save', async function(doc, next) {
     // })
     .execPopulate();
   next();
-});
+
 
 const Product = mongoose.model('Product', productSchema);
 
