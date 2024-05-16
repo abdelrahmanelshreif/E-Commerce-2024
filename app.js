@@ -14,6 +14,7 @@ const orderRouter = require('./routes/orderRoutes');
 const cateogryRouter = require('./routes/cateogryRoute');
 const brandRouter = require('./routes/brandRoutes');
 const photoRouter = require('./routes/photoRoutes');
+const wishlistRouter = require('./routes/whishlistRoutes');
 const cors = require('cors');
 
 const app = express();
@@ -48,6 +49,7 @@ app.use((req, res, next) => {
 app.use('/E-Commerce/api/v1/photo', photoRouter);
 app.use('/E-Commerce/api/v1/order', orderRouter);
 app.use('/E-Commerce/api/v1/cart', cartRouter);
+app.use('/E-Commerce/api/v1/wishlist', wishlistRouter);
 app.use('/E-Commerce/api/v1/user', userRouter);
 app.use('/E-Commerce/api/v1/cateogries', cateogryRouter);
 app.use('/E-Commerce/api/v1/brands', brandRouter);
