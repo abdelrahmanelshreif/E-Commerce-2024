@@ -24,12 +24,6 @@ const productSchema = new mongoose.Schema({
     type: Number,
     required: true
   },
-  images: [
-    {
-      type: String,
-      required: true
-    }
-  ],
   imageCover: {
     type: String,
     required: true
@@ -73,7 +67,6 @@ const productSchema = new mongoose.Schema({
       ref: 'Review'
     }
   ]
-
 });
 
 productSchema.pre(/^find/, function(next) {

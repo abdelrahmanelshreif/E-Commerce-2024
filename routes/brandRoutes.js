@@ -1,14 +1,12 @@
 const brandController = require('../controllers/brandController');
 
-const express = require('express')
-
+const express = require('express');
 
 const router = express.Router();
 
 router
   .route('/')
   .get(brandController.getAllBrands)
-  .post(brandController.createNewBrand);
+  .post(brandController.uploadBrandImage, brandController.createNewBrand);
 
-  
 module.exports = router;
